@@ -1,12 +1,18 @@
-loan_principal = 'Loan principal: 1000'
-final_output = 'The loan has been repaid!'
-first_month = 'Month 1: repaid 250'
-second_month = 'Month 2: repaid 250'
-third_month = 'Month 3: repaid 500'
+loan_principal = int(input("Enter the loan principal:\n> ").strip())
 
-# write your code here
-print(loan_principal)
-print(first_month)
-print(second_month)
-print(third_month)
-print(final_output)
+type_of_calculation = input("""What do you want to calculate?
+type "m" for number of monthly payments,
+type "p" for the monthly payment:\n> """)
+
+if type_of_calculation == "m":
+    monthly_payment = int(input("Enter the monthly payment:\n> ").strip())
+    period = -(-loan_principal // monthly_payment)
+    print(f"It will take {period} {'months' if period > 1 else 'month'} to repay the loan")
+elif type_of_calculation == "p":
+    number_months = int(input("Enter the number of months:\n> ").strip())
+    payment = -(-loan_principal // number_months)
+    if payment * number_months > loan_principal:
+        last_payment = loan_principal - (number_months - 1) * payment
+        print(f"Your monthly payment = {payment} and the last payment = {last_payment}")
+    else:
+        print(f"Your monthly payment = {payment}")
