@@ -1,25 +1,62 @@
 from math import log, pow, ceil
+import argparse
 
-print('What do you want to calculate?')
-print('type "n" for number of monthly payments,')
-print('type "a" for annuity monthly payment amount,')
-print('type "p" for loan principal:')
-calculation_type = input('> ')
+parser = argparse.ArgumentParser()
+parser.add_argument("--type", choices=["annuity", "diff"])
+parser.add_argument("--payment")
+parser.add_argument("--principal")
+parser.add_argument("--periods")
+parser.add_argument("--interest")
 
-if calculation_type == "n":
-    print('Enter the loan principal:')
-    p = int(input('> '))  # Loan principal
+args = parser.parse_args()
+type_arg = args.type
+payment_arg = args.payment
+principal_arg = args.principal
+periods_arg = args.periods
+interest_arg = args.interest
 
-    print('Enter the monthly payment:')
-    monthly_payment = int(input('> '))  # Monthly payment
 
-    print('Enter the loan interest:')
-    i = float(input('> ')) / (12 * 100)  # Nominal monthly interest rate
+def format_input_data(principal, payment, periods, interest):
+    principal = principal and int(principal)
+    payment = payment and float(payment)
+    periods = periods and int(periods)
+    interest = interest and float(interest) / (12 * 100)
+    return [principal, payment, periods, interest]
 
-    x = monthly_payment / (monthly_payment - i * p)
-    num_monthly_payments = ceil(log(x, 1 + i))
-    print(num_monthly_payments)
 
+def diff_payments_calc(principal, periods, interest):
+    total_payment = 0
+
+    for month in range(1, periods + 1):
+        x = principal - ((principal * (month - 1)) / periods)
+        monthly_diff_payment = ceil((principal / periods) + interest * x)
+        total_payment += monthly_diff_payment
+        print(f"Month {month}: payment is {monthly_diff_payment}")
+    print()
+    print(f"Overpayment = {total_payment - principal}")
+
+
+def loan_principal_calc(payment, periods, interest):
+    x = interest * pow(1 + interest, periods)
+    y = pow(1 + interest, periods) - 1
+    principal = round(payment / (x / y))
+
+    print(f'Your loan principal = {principal}!')
+    print(f"Overpayment = {round((payment * periods) - principal)}")
+
+
+def annuity_payment_calc(principal, periods, interest):
+    x = interest * pow(1 + interest, periods)
+    y = pow(1 + interest, periods) - 1
+    annuity_payment = ceil(principal * (x / y))
+
+    print(f'Your annuity payment = {annuity_payment}!')
+    print(f'Overpayment = {periods * annuity_payment - principal}!')
+
+
+def total_monthly_payments_calc(principal, payment, interest):
+    x = payment / (payment - interest * principal)
+    num_monthly_payments = ceil(log(x, 1 + interest))
     years_number = num_monthly_payments // 12
     months_number = (num_monthly_payments - years_number * 12) // 1
 
@@ -40,35 +77,41 @@ if calculation_type == "n":
             print(f'It will take {months_number} months to repay this loan!')
         elif months_number == 1:
             print(f'It will take {months_number} month to repay this loan!')
+    total_payment = round(num_monthly_payments * payment)
+    print(f"Overpayment = {total_payment - principal}")
 
-elif calculation_type == "a":
-    print('Enter the loan principal:')
-    p = int(input('> '))  # Loan principal
 
-    print('Enter the number of periods:')
-    n = int(input('> '))  # Number of payments
+def check_negative_inputs(payment, principal, periods):
+    is_payment_negative = payment and payment < 0
+    is_principal_negative = principal and principal < 0
+    is_periods_negative = periods and periods < 0
 
-    print('Enter the loan interest:')
-    i = float(input('> ')) / (12 * 100)  # Nominal monthly interest rate
+    if is_payment_negative or is_principal_negative or is_periods_negative:
+        return True
+    return False
 
-    x = i * pow(1 + i, n)
-    y = pow(1 + i, n) - 1
-    a = ceil(p * (x / y))  # Annuity payment
 
-    print(f'Your monthly payment = {a}!')
+def calculator(calc_type, principal, payment, periods, interest):
+    principal, payment, periods, interest = format_input_data(principal, payment, periods, interest)
 
-elif calculation_type == "p":
-    print('Enter the annuity payment:')
-    a = float(input('> '))  # Annuity payment
+    if (not calc_type) or (calc_type == 'diff' and payment) or (not interest):
+        print("Incorrect parameters")
+        return
 
-    print('Enter the number of periods:')
-    n = int(input('> '))  # Number of payments
+    invalid_inputs = check_negative_inputs(payment, principal, periods)
+    if invalid_inputs:
+        print("Incorrect parameters")
+        return
 
-    print('Enter the loan interest:')
-    i = float(input('> ')) / (12 * 100)  # Nominal monthly interest rate
+    if calc_type == "annuity":
+        if payment and principal:
+            total_monthly_payments_calc(principal, payment, interest)
+        elif payment and periods:
+            loan_principal_calc(payment, periods, interest)
+        elif principal:
+            annuity_payment_calc(principal, periods, interest)
+    elif calc_type == "diff":
+        diff_payments_calc(principal, periods, interest)
 
-    x = i * pow(1 + i, n)
-    y = pow(1 + i, n) - 1
-    p = round(a / (x / y))  # Loan principal
 
-    print(f'Your loan principal = {p}!')
+calculator(type_arg, principal_arg, payment_arg, periods_arg, interest_arg)

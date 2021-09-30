@@ -21,7 +21,7 @@ print('Hello, a')</code></pre>
 print('%.2f' % (11/3))  # 3.67</code></pre> 
   <p>For every operation, you had to know plenty of specifiers, length modifiers and conversion types. A huge variety of extra operators led to some common errors. That's why more modern and easy to use operators were introduced. Progress never stops, you know!</p> 
   <p>Formatting your strings also makes your code look more readable and easily editable.</p> 
-  <h2 style="text-align: center;">The str. format() method</h2> 
+  <h5 style="text-align: center;">The str. format() method</h5> 
   <p>The operation of the method is already described in its name: in the <strong>string part</strong>, we introduce curly braces as placeholders for variables enlisted in the <strong>format part</strong>:</p> 
   <pre><code class="language-python">print('Mix {}, {} and a {} to make an ideal omelet.'.format('2 eggs', '30 g of milk', 'pinch of salt'))</code></pre> 
   <p>The expressions are put instead of braces in the order they were mentioned:</p> 
@@ -54,7 +54,7 @@ print('%.2f' % (11/3))  # 3.67</code></pre>
    <strong>after</strong> positional, or non-keyword, arguments.
   </div>
   <p></p> 
-  <h2 style="text-align: center;">Formatted string literals</h2> 
+  <h5 style="text-align: center;">Formatted string literals</h5> 
   <p><strong>Formatted string literals</strong> (or, simply, <strong>f-strings</strong>) are used to embed the values of expressions inside string literals. This way is supposed to be the easiest one: you only need to put <strong>f</strong> before the string and put the variables you want to embed into the string in curly braces. They are also the newest feature among all string formatting methods in Python.</p> 
   <pre><code class="language-python">name = 'Elizabeth II'
 title = 'Queen of the United Kingdom and the other Commonwealth realms'
@@ -73,7 +73,7 @@ print(f'{needed_percent}% from {hundred_percent_number} is {needed_percent_numbe
 print(f'Rounding {needed_percent_number} to 1 decimal place is {needed_percent_number:.1f}')
 # Rounding 291.68 to 1 decimal place is 291.7</code></pre> 
   <p>You can read more about Format Specification Mini-Language in Python in the <a target="_blank" href="https://docs.python.org/3.6/library/string.html#format-specification-mini-language" rel="noopener noreferrer nofollow">official documentation</a>.</p> 
-  <h2>Summary</h2> 
+  <h5>Summary</h5> 
   <p>Thus, in this topic, we've learned several ways of string formatting: by using % operator, str.format() method, and f-strings. Maybe now you think that these methods are not important and overrated, but in practice, they are quite useful and give you an opportunity to make your code look fancy and readable.</p>
  </body>
 </html>
